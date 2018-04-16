@@ -17,13 +17,14 @@ Date: 2018.4.14~2018.4.15
 GPU管道中最有趣的部分，可编程着色器。有什么理由不去学习呢？不是说要做出很多牛逼的特效，而是通过实作，去学习计算机图形学，去更加了解其中光照，材质，纹理，更加了解渲染原理，作为日后做游戏的内功。既然开始了，就好好的做好吧！加油！
 
 ## 书写第一个Shader
-
+**凹凸纹理显示+自选边缘颜色和强度Shader**
 ```c++
 Shader "RogerXu/0.TheFirstShader"
 {
 	// 属性
 	// Ref: https://docs.unity3d.com/Manual/SL-Properties.html
-	Properties {
+	Properties 
+    {
 		_MainTex("Texture", 2D) = "white" {}
 		_BumpMap("Bump Map", 2D) = "bump" {}
 		_RimColor("Rim Color", Color) = (0.17, 0.36, 0.81, 0.0)
@@ -41,10 +42,11 @@ Shader "RogerXu/0.TheFirstShader"
 		#pragma surface surf Lambert
 
 		// 输入结构
-		struct Input {
-		float2 uv_MainTex;
-		float2 uv_BumpMap;
-		float3 viewDir;
+		struct Input 
+        {
+            float2 uv_MainTex;
+            float2 uv_BumpMap;
+            float3 viewDir;
 		};
 
 		// 变量声明
@@ -273,11 +275,13 @@ public class ShowObjectInfo : MonoBehaviour
 
 ```
 
-## 效果展示
+## 最终效果展示
 
 ![Lesson 1](images/L1.png)
 
 加上了[法线贴图](https://en.wikipedia.org/wiki/Normal_mapping)和边缘颜色之后，模型的立体感（视觉效果）更好了。要注意的是，模型还是原来的胶囊体。可见贴图的强大呀。
 
-好的，第一课学习完毕，感受到着色器的强大功能。（冰山一角）哈哈，接下来更加深入的学习吧。
+## 总结
+
+好的，第一课学习完毕，感受到着色器的强大功能（冰山一角）。仿写了一个 `凹凸纹理显示+自选边缘颜色和强度Shader` ，效果还是不错的呀。
 
