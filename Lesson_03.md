@@ -282,7 +282,7 @@ Removed in Unity 5.0
 
 在片元着色器出现之前，老的显卡使用分层叠加的操作方案，纹理一层一层的被应用。对于每一个纹理，一般来说都是和之前操作的结果进行混合（combine）。
 
-![SetTextureGraph](images\SetTextureGraph.png)
+![SetTextureGraph](images/SetTextureGraph.png)
 
 需要注意的是，对于“纯正”的“固定功能流水线”设备（比如说OpenGL, OpenGL ES 1.1, Wii），每个SetTexture阶段的值被限制为0到1的范围之间。而其他的设备（如Direct3D, OpenGL ES 2.0）中，这个范围就不一定是固定的。这种情况就可能会影响SetTexture阶段，可能使产生的值高于1.0。
 
@@ -442,4 +442,4 @@ Shader "RogerShader/10.Self-Illumination3" {
 
 
 
-![L3](images\L3.png)
+![L3](images/L3.png)
