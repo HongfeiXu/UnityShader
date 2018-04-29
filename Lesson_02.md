@@ -5,7 +5,7 @@
 
 Date: 2018.4.15~4.16
 
-## 两种渲染管线与三种Shader类型
+## 1. 两种渲染管线与三种Shader类型
 
 > Ref: https://docs.unity3d.com/Manual/SL-Reference.html
 
@@ -22,14 +22,14 @@ Unity3D中，Shader可以分为三种基本类型：
 
 
 
-## Unity3D的基本Shader框架
+## 2. Unity3D的基本Shader框架
 
 > [ShaderLab Syntax](https://docs.unity3d.com/Manual/SL-Shader.html)
 
 ```c++
 Shader "name" { [Properties] Subshaders [Fallback] [CustomEditor] }
 ```
-### 框架
+### 2.1 框架
 
 ![](images/ShaderCodeStructure.png)
 
@@ -53,7 +53,7 @@ Shader "RogerShader/0.Shader框架实例"
 }
 ```
 
-### Properties
+### 2.2 Properties
 
 Shaders can define a list of parameters to be set by artists in Unity’s [material inspector](https://docs.unity3d.com/Manual/Materials.html). The Properties block in the [shader file](https://docs.unity3d.com/Manual/SL-Shader.html) defines them.
 
@@ -101,13 +101,15 @@ Properties
 }
 ```
 
-### SubShader和Fallback
+### 2.3 SubShader和Fallback
 
 Each shader is comprised of a list of [sub-shaders](https://docs.unity3d.com/Manual/SL-SubShader.html). You must have at least one. When loading a shader, Unity will go through the list of subshaders, and pick the first one that is supported by the end user’s machine. If no subshaders are supported, Unity will try to use [fallback shader](https://docs.unity3d.com/Manual/SL-Fallback.html).
 
-## 光照、材质和颜色相关内容讲解（固定渲染管线）
+## 3. 光照、材质和颜色相关内容讲解（固定渲染管线）
 
-灯光和材质参数常常被用来控制内置的顶点光照。而Unity中的顶点光照也就是Direct3D/OpenGL标准的按每顶点计算的光照模型—— 光照打开时，光照受材质块，颜色材质和平行高光命令的影响。
+> [ShaderLab: Legacy Lighting](https://docs.unity3d.com/Manual/SL-Material.html)
+
+灯光和材质参数常常被用来控制内置的顶点光照。而Unity中的顶点光照也就是Direct3D/OpenGL标准的按每顶点计算的光照模型—— 光照打开时，光照受到 `Material block`, `ColorMaterial`和`SeparateSepcular`命令的影响。
 
 **举个固定渲染管线的Shader栗子**
 
@@ -167,7 +169,7 @@ Shader "RogerShader/VertexLit"
 
 
 
-### 1. 用于通道Pass中的代码写法列举
+### 3.1 用于通道Pass中的代码写法列举
 
 这些代码一般是写在Pass{}中的，细节如下：
 
@@ -186,7 +188,7 @@ Shader "RogerShader/VertexLit"
 **ColorMaterial _AmbientAndDiffuse_/_Emission_**<br>
 使用每顶点颜色替代材质中的颜色集。AmbientAndDiffuse替代材质的阴影光和漫反射值；Emission替代材质中的光发射值。
 
-### 2. 材质块Material Block中相关代码写法举例 
+### 3.2 材质块Material Block中相关代码写法举例 
 
 下面这些代码的使用地方是在SubShader中的一个Pass{}中新开一个**Material{}块**，在这个Material{}块中进行这些语句的书写。如[Unity Manual](https://docs.unity3d.com/Manual/ShaderTut1.html)所说，Material Block binds our property values to the fixed function lighting material settings.
 
@@ -204,17 +206,17 @@ Shader "RogerShader/VertexLit"
 
 **最终，打在对象上的完整光照颜色为：**
 
-FinalColor = Ambient * RenderSettings ambientsetting + (Light Color * Diffuse + Light Color * Specular) + Emission
+`FinalColor = Ambient * Lighting Window's Ambient Intensity setting + (Light Color * Diffuse + Light Color * Specular) + Emission`
 
 注意：方程式的灯光部分（也就是带括号的部分）对所有打在对象上的光线都是重复使用的。而我们在写Shader的时候**常常会将漫反射和环境光光保持一致**（所有内置Unity着色器都是如此）。
 
-## Shader书写实战
+## 4. Shader书写实战
 
 **最效果图终**
 
 ![](images/L2.png)
 
-### 1. 基础单色
+### 4.1 基础单色
 
 ```c
 Shader "RogerShader/1.基础单色" 
@@ -230,7 +232,7 @@ Shader "RogerShader/1.基础单色"
 }
 ```
 
-### 2. 材质颜色设置&开启光照
+### 4.2 材质颜色设置&开启光照
 
 ```c++
 Shader "RogerShader/2.材质颜色设置&开启光照" {
@@ -254,7 +256,7 @@ Shader "RogerShader/2.材质颜色设置&开启光照" {
 }
 ```
 
-### 3. 简单的可调漫反射光照
+### 4.3 简单的可调漫反射光照
 
 ```c++
 Shader "RogerShader/3.简单的可调漫反射光照" {
@@ -278,7 +280,7 @@ Shader "RogerShader/3.简单的可调漫反射光照" {
 }
 ```
 
-### 4. 光照材质完备beta版Shader
+### 4.4 光照材质完备beta版Shader
 
 ```c++
 Shader "RogerShader/4.光照材质完备beta版Shader" {
@@ -308,7 +310,7 @@ Shader "RogerShader/4.光照材质完备beta版Shader" {
 }
 ```
 
-### 5. 简单载入纹理
+### 4.5 简单载入纹理
 
 ```
 Shader "RogerShader/5.简单载入纹理" {
@@ -330,7 +332,7 @@ Shader "RogerShader/5.简单载入纹理" {
 }
 ```
 
-### 6. 光照材质完备正式版Shader
+### 4.6 光照材质完备正式版Shader
 
 ```c++
 Shader "RogerShader/6.光照材质完备正式版Shader" {
@@ -359,7 +361,7 @@ Shader "RogerShader/6.光照材质完备正式版Shader" {
 			SeparateSpecular On
 			SetTexture[_MainTex]
 			{
-				Combine texture * primary DOUBLE, texture * constant
+				Combine texture * primary DOUBLE, texture * primary
 			}
 		}
 	}
@@ -367,7 +369,7 @@ Shader "RogerShader/6.光照材质完备正式版Shader" {
 }
 ```
 
-## 总结
+## 5. 总结
 
 这一节，我学习了Unity3D的基本Shader框架，以及固定管线着色器的写法，最后，从简单到复杂，写出了集合了材质、光照（包括环境光、散射光、高光、自发光）、纹理贴图的固定管线着色器。
 
