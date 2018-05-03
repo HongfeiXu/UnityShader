@@ -92,14 +92,14 @@ Default fog settings are based on settings in the [Lighting Window](https://docs
 
 Note that if you use [fragment programs](https://docs.unity3d.com/Manual/SL-ShaderPrograms.html), Fog settings of the shader will still be applied. On platforms where there is no fixed function Fog functionality, Unity will patch shaders at runtime to support the requested Fog mode.
 
-## 3. Shader 书写实战
+## 3. Shader书写实战
 
-### 3.1 用剔除操作渲染对象表面
+### 3.1 用剔除操作渲染对象背面
 
 ![](images/L4_01.png)
 
 ```
-Shader "RogerShader/12.用剔除操作渲染对象表面" {
+Shader "RogerShader/12.用剔除操作渲染对象背面" {
 	SubShader {
 		Pass{
 			Material{
@@ -117,7 +117,9 @@ Shader "RogerShader/12.用剔除操作渲染对象表面" {
 
 ### 3.2 用剔除操作渲染对象背面_v2 
 
-用亮蓝色渲染对象背面
+用亮蓝色渲染对象背面。
+
+这个Shader的效果是突出那些normal值不正确的面片（通过将其渲染为亮蓝色，当然也可以自己定义），可以用来Debug。
 
 ![](images/L4_02.png)
 
@@ -161,7 +163,7 @@ Shader "RogerShader/13.用剔除操作渲染对象背面_v2" {
 }
 ```
 
-#### 3.3 用剔除实现玻璃效果
+### 3.3 用剔除实现玻璃效果
 
 用于凸物体（球，立方体，车窗）的简单玻璃效果的着色器：
 
@@ -220,7 +222,7 @@ Shader "RogerShader/14.用剔除实现玻璃效果" {
 }
 ```
 
-#### 3.4 基本Alpha测试
+### 3.4 基本Alpha测试
 
 ![](images/L4_03.png)
 
@@ -245,7 +247,7 @@ Shader "RogerShader/15.基本Alpha测试" {
 
 
 
-#### 3.5 顶点光照+可调透明度的Alpha测试
+### 3.5 顶点光照+可调透明度的Alpha测试
 
 ![](images/L4_05.png)
 
@@ -281,9 +283,9 @@ Shader "RogerShader/16.顶点光照+可调透明度" {
 }
 ```
 
-#### 3.6 简单的植被Shader
+### 3.6 简单的植被Shader
 
-TODO: 需要找到可以用于实验的植被模型以及材质（）
+
 
 ```
 /*
@@ -484,3 +486,8 @@ public class ShowFPS : MonoBehaviour
 }
 ```
 
+## 5. 总结
+
+这一节，我学习了Culling & Depth Testing。Culling 可以用来渲染对象背面来进行法向Debug；实现凸多面体的玻璃效果。学写了Alpha Testing的使用，可以用来分两步渲染植物（树叶，草等）。并且编写了三个新的功能脚本，可以显示系统参数，以及显示\设置FPS。
+
+**TODO**：对于最后一个Shader，简单的植被Shader，需要找到可以用于实验的植被模型以及材质（材质需要有alpha值）来验证实际效果。
