@@ -445,3 +445,9 @@ Shader "RogerShader/10.Self-Illumination3" {
 
 
 ![L3](images/L3.png)
+
+## 5. 总结
+
+这一节东西比较多，我学习了SubShader的写法，包括其中的SubShader Tags（Queue tag是重点），以及Pass的写法，包括其中的Pass Tags，以及Pass Render Setup（需要注意的是这些渲染设置如果写在 SubShader 中，则会作用于所有的 Pass）。
+
+然后学习了重要的纹理混合命令，combine。
