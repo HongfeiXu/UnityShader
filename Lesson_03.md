@@ -1,4 +1,4 @@
-# Lesson 3 子着色器、通道与标签的写法 & 纹理混合
+# Lesson 3  _SubShader_ 、 _Pass_ 与 _Tag_ 的写法 & 纹理混合
 
 > Ref: 浅墨的[《Unity Shader编程》](https://blog.csdn.net/column/details/unity3d-shader.html)专栏
 
@@ -6,11 +6,11 @@ Date: 2018.4.17
 
 [TOC]
 
-## 1. 子着色器（SubShader）
+## 1.  _SubShader_ 
 
 > Ref: [ShaderLab: SubShader](https://docs.unity3d.com/Manual/SL-SubShader.html)
 
-Unity中的每一个着色器（Shader）都包含一个子着色器（Subshader）的列表，当Unity需要显示一个网格时，它能发现使用的Shader，并提取第一个能运行在当前用户的显示卡上的Subshader。
+Unity中的每一个着色器（Shader）都包含一个 _SubShader_ 的列表，当Unity需要显示一个网格时，它能发现使用的Shader，并提取第一个能运行在当前用户的显示卡上的Subshader。
 
 唤起回忆，Shader的语法如下：
 
@@ -24,19 +24,19 @@ Shader "name" { [Properties] Subshaders [Fallback] [CustomEditor] }
 Subshader { [Tags] [CommonState] Passdef [Passdef ...] }
 ```
 
-也就是通过可选标签，通用状态和一个通道定义（Pass def）的列表构成了子着色器。
+也就是通过可选标签，通用状态和一个 _Pass_ 定义（Pass def）的列表构成了 _SubShader_ 。
 
-当Unity选择用于渲染的子着色器时，它为每一个被定义的通道渲染一次对象（可能会更多，这取决于光线的交互作用）。当对象的每一次渲染都是很费资源之时，我们便使用尽量少的通道来定义一个着色器。当然，**有时在一些显示硬件上需要的效果不能通过单次通道来完成。自然就得使用多通道的子着色器了。**
+当Unity选择用于渲染的 _SubShader_ 时，它为每一个被定义的 _Pass_ 渲染一次对象（可能会更多，这取决于光线的交互作用）。当对象的每一次渲染都是很费资源之时，我们便使用尽量少的 _Pass_ 来定义一个着色器。当然，**有时在一些显示硬件上需要的效果不能通过单次 _Pass_ 来完成。自然就得使用多 _Pass_ 的 _SubShader_ 了。**
 
-通道定义的类型包括a [regular Pass](https://docs.unity3d.com/Manual/SL-Pass.html), a [Use Pass](https://docs.unity3d.com/Manual/SL-UsePass.html) or a [Grab Pass](https://docs.unity3d.com/Manual/SL-GrabPass.html)。
+ _Pass_ 定义的类型包括a [regular Pass](https://docs.unity3d.com/Manual/SL-Pass.html), a [Use Pass](https://docs.unity3d.com/Manual/SL-UsePass.html) or a [Grab Pass](https://docs.unity3d.com/Manual/SL-GrabPass.html)。
 
-任何出现在通道定义的状态同时也能整个子着色器块中可见。这将使得所有通道共享状态（Common State）。
+任何允许出现在 _Pass_ 定义中的状态，也可以出现在 _SubShader_ 块中。这将使得所有 _Pass_ 共用该状态（Common State）。
 
-### 1.1 子着色器标签（Subshader Tags）
+### 1.1  Subshader Tags
 
 > Ref: [ShaderLab: SubShader Tags](https://docs.unity3d.com/Manual/SL-SubShaderTags.html)
 
-子着色器使用标签来告诉渲染引擎期望何时和如何渲染对象。其语法如下：
+ _SubShader_ 使用标签来告诉渲染引擎期望何时和如何渲染对象。其语法如下：
 
 ```c++
 Tags { "TagName1" = "Value1" "TagName2" = "Value2" }
@@ -44,7 +44,7 @@ Tags { "TagName1" = "Value1" "TagName2" = "Value2" }
 
 也就是，为标签"TagName1"指定值"Value1"。为标签"TagName2"指定值"Value2"。我们可以设定任意多的标签。
 
-标签是标准的键值对，也就是可以根据一个键值获得对应的一个值的。SubShader中的标签是用来决定渲染的次序和子着色器中的其他参数的。
+标签是标准的键值对，也就是可以根据一个键值获得对应的一个值的。SubShader中的标签是用来决定渲染的次序和 _SubShader_ 中的其他参数的。
 
 注意：
 
@@ -53,7 +53,7 @@ Tags { "TagName1" = "Value1" "TagName2" = "Value2" }
 
 ### 1.2 Subshader Tags 之 队列标签（Queue tag）
 
-我们可以使用 Queue 标签来决定对象被渲染的次序。着色器决定它所归属的对象的渲染队列，任何透明渲染器可以通过这个办法保证在所有不透明对象渲染完毕后再进行渲染。
+我们可以使用 Queue 标签来**决定对象被渲染的次序**。着色器决定它所归属的对象的渲染队列，任何透明渲染器可以通过这个办法保证在所有不透明对象渲染完毕后再进行渲染。
 
 有五种预定义（predefined）的渲染队列（render queue），在预定义队列之间还可以定义更多的队列。这四种预定义的标签如下：
 
@@ -99,7 +99,7 @@ Tags { "Queue" = "Geometry+1" }
 - PreviewType tag
 
 
-## 2. 通道（Pass）
+## 2.  _Pass_ 
 
 > Ref: [ShaderLab: Pass](https://docs.unity3d.com/Manual/SL-Pass.html)
 
@@ -109,11 +109,11 @@ Pass 块导致GameObject的几何体被渲染一次。其语法定义如下：
 Pass { [Name and Tags] [RenderSetup] }
 ```
 
-### 2.1 通道中的名称与标签（Name and Tags）
+### 2.1  _Pass_ 中的 _Name_ and _Tags_
 
 > Ref: [ShaderLab: Pass Tags](https://docs.unity3d.com/Manual/SL-PassTags.html)
 
-一个通道能够定义它的Name和任意数量的Tags。通过使用Tags来告诉渲染引擎在什么时候、该如何渲染。语法如下：
+一个 _Pass_ 能够定义它的Name和任意数量的Tags。通过使用Tags来告诉渲染引擎在什么时候、该如何渲染。语法如下：
 
 ```c++
 Tags { "TagName1" = "Value1" "TagName2" = "Value2" }
@@ -146,11 +146,11 @@ LightMode 标签定义了Shader的光照模式，具体含义以后会在讲渲染管线时讲到。下面我们
 
 
 
-### 2.2 通道中的渲染设置（Render Setup）
+### 2.2  _Pass_ 中的渲染设置（Render Setup）
 
-通道中的渲染设置可以设置图形硬件的各种状态，例如是否打开Alpha混合或是是否应用深度测试。（注：类似于OpenGL 中的 glEnable() 函数）
+ _Pass_ 中的渲染设置可以设置图形硬件的各种状态，例如是否打开Alpha混合或是是否应用深度测试。（注：类似于OpenGL 中的 glEnable() 函数）
 
-这些命令如下：
+这些命令如下（注：这些渲染设置如果写在 _SubShader_ 中，则会作用于所有的 _Pass_ ）：
 
 | Cull and Depth                                               | Detail           |
 | ------------------------------------------------------------ | ---------------- |
@@ -175,6 +175,8 @@ LightMode 标签定义了Shader的光照模式，具体含义以后会在讲渲染管线时讲到。下面我们
 | -------------------------------------------------------- | ------------ |
 | ColorMask RGB \| A \| 0 \| any combination of R, G, B, A | 设置颜色遮罩 |
 
+另外，_Pass_ 中还可以使用固定管线的着色器命令。
+
 **Legacy fixed-function Shader commands**
 
 Note that all of the following commands are are ignored if you are not using fixed-function Shaders.
@@ -193,12 +195,12 @@ Note that all of the following commands are are ignored if you are not using fix
 | AlphaTest (Less \| Greater \| LEqual \| GEqual \| Equal \| NotEqual \| Always) CutoffValue | 开启Alpha测试 |
 | SetTexture textureProperty { combine options }               | 纹理设置      |
 
-### 2.3 特殊通道
+### 2.3 特殊 _Pass_ 
 
-有时候，我们会写一些特殊的通道，要多次反复利用普通的功能或是实现高端的特效。应对这些情况，Unity中就有一些高级点武器可以选用。
+有时候，我们会写一些特殊的 _Pass_ ，要多次反复利用普通的功能或是实现高端的特效。应对这些情况，Unity中就有一些高级点武器可以选用。
 
-- UsePass，UsePass可以包含来自其他着色器的通道，来减少重复的代码。
-- GrabPass，GrabPass 可以捕获物体所在位置的屏幕的内容并写入到一个纹理中，通常在靠后的通道中使用，这个纹理能被用于后续的通道中完成一些高级图像特效。一个小例子如下：
+- UsePass，UsePass可以包含来自其他着色器的 _Pass_ ，来减少重复的代码。
+- GrabPass，GrabPass 可以捕获物体所在位置的屏幕的内容并写入到一个纹理中，通常在靠后的 _Pass_ 中使用，这个纹理能被用于后续的 _Pass_ 中完成一些高级图像特效。一个小例子如下：
 
 ```c++
 Shader "RogerShader/GrabPassInvert" {
@@ -229,7 +231,7 @@ Shader "RogerShader/GrabPassInvert" {
 
 在基本的顶点光照计算完成之后，纹理被应用。因此，SetTexture命令放置在Pass的末尾。需要注意的是，SetTexture在使用了片段着色器时不会生效，因为像素操作被完全描述在片段着色器中。
 
-材质贴图可以用来实现旧式风格的混合器效果。我们可以在一个通道中使用多个SetTexture命令， SetTexture所有纹理都是按代码顺序来添加的，也就是如同Photoshop中的图层操作一样
+材质贴图可以用来实现旧式风格的混合器效果。我们可以在一个 _Pass_ 中使用多个SetTexture命令， SetTexture所有纹理都是按代码顺序来添加的，也就是如同Photoshop中的图层操作一样
 
 语法定义如下：
 
@@ -300,7 +302,7 @@ SetTexture [_MainTex] { combine previous * texture, previous + texture }
 
 #### 3.4.2 Specular highlights
 
-默认情况下**primary**颜色是diffuse，ambient，specular（在光线计算中定义）的加和。如果我们将通道设置中的SeparateSpecular On 写上，specular便会在combine计算后被加入，而不是之前。PS:Unity内置的顶点着色器就是加上SeparateSpecular On的。
+默认情况下**primary**颜色是diffuse，ambient，specular（在光线计算中定义）的加和。如果我们将 _Pass_ 设置中的SeparateSpecular On 写上，specular便会在combine计算后被加入，而不是之前。PS:Unity内置的顶点着色器就是加上SeparateSpecular On的。
 
 #### 3.4.3 显卡的支持情况
 
@@ -431,7 +433,7 @@ Shader "RogerShader/10.Self-Illumination3" {
 				combine constant lerp(texture) primary
 			}
 			
-			//// Multiply in texture
+			// Multiply in texture
 			SetTexture[_MainTex] {
 				combine previous * texture
 			}

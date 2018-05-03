@@ -173,7 +173,7 @@ Shader "RogerShader/VertexLit"
 
 
 
-### 3.1 用于通道Pass中的代码写法列举
+### 3.1 用于 _Pass_ 中的代码写法列举
 
 这些代码一般是写在Pass{}中的，细节如下：
 
@@ -187,12 +187,12 @@ Shader "RogerShader/VertexLit"
 开启标准顶点光照。也就是确定材质块中的设定是否有效。如果想要有效的话必须使用Lighting On命令开启光照。注：如果打开光照，但未设置Material，则对象被渲染为黑色（即便设置了Color）。如果未打开光照，但设置了Material，则对象被渲染为白色。
 
 **SeparateSpecular _On_/_Off_**<br>
-开启独立镜面反射。这个命令会添加高光光照到着色器通道的末尾，使得贴图对高光没有影响。只有在光照开启时有效。
+开启独立镜面反射。这个命令会添加高光光照到着色器 _Pass_ 的末尾，使得贴图对高光没有影响。只有在光照开启时有效。
 
 **ColorMaterial _AmbientAndDiffuse_/_Emission_**<br>
 使用每顶点颜色替代材质中的颜色集。AmbientAndDiffuse替代材质的阴影光和漫反射值；Emission替代材质中的光发射值。
 
-### 3.2 材质块Material Block中相关代码写法举例 
+### 3.2 Material Block中相关代码写法举例 
 
 下面这些代码的使用地方是在SubShader中的一个Pass{}中新开一个**Material{}块**，在这个Material{}块中进行这些语句的书写。如[Unity Manual](https://docs.unity3d.com/Manual/ShaderTut1.html)所说，Material Block binds our property values to the fixed function lighting material settings.
 

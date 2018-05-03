@@ -95,7 +95,7 @@ Shader "RogerXu/0.TheFirstShader"
 - **Textures** are bitmap images. A Material can contain references to textures, so that the Material’s Shader can use the textures while calculating the surface color of a GameObject. In addition to basic Color (Albedo) of a GameObject’s surface, Textures can represent many other aspects of a Material’s surface such as its reflectivity or roughness.
 
 
-## 添加文字说明
+## 功能脚本：添加文字说明
 
 ```c#
 
